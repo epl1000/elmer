@@ -1,10 +1,10 @@
 import argparse
 from pathlib import Path
 
-from .config import PCBParams
-from .gmsh_generator import generate_geo
-from .gui import PCBGmshGUI
-from .utils import open_gmsh_with_file
+from config import PCBParams
+from gmsh_generator import generate_geo
+from gui import PCBGmshGUI
+from utils import open_gmsh_with_file
 
 
 def _add_param_arguments(parser: argparse.ArgumentParser) -> None:

@@ -1,4 +1,4 @@
-from pcb_gmsh_generator.gui import PCBGmshGUI
+from gui import PCBGmshGUI
 
 
 def main() -> None:
