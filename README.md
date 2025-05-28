@@ -8,16 +8,16 @@ This repository provides tools for creating a Gmsh `.geo` script describing a si
 - Gmsh installed and accessible via the `gmsh` command.
 
 ## Module Layout
-The code lives in the `src/pcb_gmsh_generator/` package:
+All Python files now live in the repository root:
 - `config.py` – defines the `PCBParams` dataclass containing all geometry parameters.
 - `gmsh_generator.py` – provides `generate_geo(params)` returning the `.geo` contents.
 - `gui.py` – Tkinter GUI built on top of `PCBParams` and `generate_geo`.
 - `utils.py` – helper utilities such as launching Gmsh.
 
-The old monolithic script has been replaced by a thin `main.py` which simply launches the GUI.
+`main.py` launches the GUI.
 
 ## Running the GUI
-1. Execute `python main.py` or `python -m pcb_gmsh_generator --gui`.
+1. Execute `python main.py` to launch the GUI.
 2. Adjust the PCB parameters as needed.
 3. Specify the output directory and file name.
 4. Click **Generate GMSH Script**. If *Open in Gmsh after generation* is checked, the file opens in Gmsh automatically.
@@ -25,13 +25,13 @@ The old monolithic script has been replaced by a thin `main.py` which simply lau
 The generated script defines four volumes: the ground with vias, the trace, the surrounding air, and the dielectric. Comments in the file list these IDs for reference.
 
 ## Command Line Usage
-The package also exposes a CLI. Run:
+A simple CLI is also available via `__main__.py`:
 
 ```bash
-python -m pcb_gmsh_generator -o pcb_model.geo [--open] [--param value ...]
+python __main__.py -o pcb_model.geo [--open] [--param value ...]
 ```
 
-All parameters from `PCBParams` are available as flags (e.g. `--ground-size 15`).  Use `--help` to see the full list of options.
+All parameters from `PCBParams` are available as flags (e.g. `--ground-size 15`). Use `--help` to see the full list of options.
 
 ## Opening the file in Gmsh
 1. Open the generated `.geo` file in Gmsh (or let the GUI/CLI do this step).

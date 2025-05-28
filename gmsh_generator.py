@@ -1,4 +1,4 @@
-from .config import PCBParams
+from config import PCBParams
 
 
 def generate_geo(params: PCBParams) -> str:

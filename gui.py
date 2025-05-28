@@ -2,9 +2,9 @@ import os
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 
-from .config import PCBParams
-from .gmsh_generator import generate_geo
-from .utils import open_gmsh_with_file
+from config import PCBParams
+from gmsh_generator import generate_geo
+from utils import open_gmsh_with_file
 
 
 class PCBGmshGUI:
