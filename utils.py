@@ -65,13 +65,13 @@ def run_gmsh_batch(file_path: str, gmsh_path: Optional[str] = None) -> None:
     try:
         if gmsh_path:
             try:
-                subprocess.run([gmsh_path, file_path, "-"], check=True)
+                subprocess.run([gmsh_path, file_path, "-nopopup", "-"], check=True)
                 return
             except (FileNotFoundError, subprocess.SubprocessError, subprocess.CalledProcessError):
                 pass
 
         try:
-            subprocess.run(["gmsh", file_path, "-"], check=True)
+            subprocess.run(["gmsh", file_path, "-nopopup", "-"], check=True)
             return
         except (FileNotFoundError, subprocess.SubprocessError, subprocess.CalledProcessError):
             pass
@@ -84,7 +84,7 @@ def run_gmsh_batch(file_path: str, gmsh_path: Optional[str] = None) -> None:
             ]
             for gmsh_path in gmsh_exe_paths:
                 if os.path.exists(gmsh_path):
-                    subprocess.run([gmsh_path, file_path, "-"], check=True)
+                    subprocess.run([gmsh_path, file_path, "-nopopup", "-"], check=True)
                     return
 
         print("Warning: Could not find Gmsh executable. Please run Gmsh manually.")
