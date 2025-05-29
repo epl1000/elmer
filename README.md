@@ -36,8 +36,7 @@ All parameters from `PCBParams` are available as flags (e.g. `--ground-size 15`)
 
 ## Opening the file in Gmsh
 1. Open the generated `.geo` file in Gmsh (or let the GUI/CLI do this step).
-2. Use **Mesh → 3D** to create the mesh.
-3. Save the result as `pcb_model.msh`.
+   The script now generates a 3D mesh automatically and saves it as `pcb_model.msh`.
 
 ## Importing into Elmer
 1. Convert the mesh using `ElmerGrid 4 2 pcb_model.msh`.
