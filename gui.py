@@ -17,7 +17,9 @@ class PCBGmshGUI:
         self.root = tk.Tk()
         self.root.title("PCB GMSH Generator")
         # Give the window a wider aspect ratio to better fit landscape screens
-        self.root.geometry("950x600")
+        # Ensure the height is large enough to show all controls on start
+        self.root.geometry("950x700")
+        self.root.minsize(950, 700)
         self._build_widgets()
 
     # ------------------------------------------------------------------
