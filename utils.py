@@ -1,11 +1,40 @@
 import os
 import platform
 import subprocess
+from typing import Optional
+
+CONFIG_PATH = os.path.join(os.path.expanduser("~"), ".pcb_gmsh_gui")
 
 
-def open_gmsh_with_file(file_path: str) -> None:
+def load_last_gmsh_path() -> Optional[str]:
+    """Return the previously saved Gmsh executable path if available."""
+    try:
+        with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+            path = f.read().strip()
+            return path or None
+    except OSError:
+        return None
+
+
+def save_last_gmsh_path(path: str) -> None:
+    """Persist the selected Gmsh executable path for future sessions."""
+    try:
+        with open(CONFIG_PATH, "w", encoding="utf-8") as f:
+            f.write(path)
+    except OSError:
+        pass
+
+
+def open_gmsh_with_file(file_path: str, gmsh_path: Optional[str] = None) -> None:
     """Try to open Gmsh with the given .geo file."""
     try:
+        if gmsh_path:
+            try:
+                subprocess.Popen([gmsh_path, file_path])
+                return
+            except (FileNotFoundError, subprocess.SubprocessError):
+                pass
+
         try:
             subprocess.Popen(["gmsh", file_path])
             return

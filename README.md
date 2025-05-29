@@ -20,7 +20,8 @@ All Python files now live in the repository root:
 1. Execute `python main.py` to launch the GUI.
 2. Adjust the PCB parameters as needed.
 3. Specify the output directory and file name.
-4. Click **Generate GMSH Script**. If *Open in Gmsh after generation* is checked, the file opens in Gmsh automatically.
+4. (Optional) Use **Browse...** next to *Gmsh Executable* to locate `gmsh` if it is not on your `PATH`. The selected path will be remembered.
+5. Click **Generate GMSH Script**. If *Open in Gmsh after generation* is checked, the file opens in Gmsh automatically.
 
 The generated script defines four volumes: the ground with vias, the trace, the surrounding air, and the dielectric. Comments in the file list these IDs for reference.
 
