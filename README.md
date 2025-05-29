@@ -29,8 +29,10 @@ The generated script defines four volumes: the ground with vias, the trace, the 
 A simple CLI is also available via `__main__.py`:
 
 ```bash
-python __main__.py -o pcb_model.geo [--open] [--param value ...]
+python __main__.py -o pcb_model.geo [--open | --mesh] [--param value ...]
 ```
+
+Use `--mesh` to run Gmsh in batch mode so the `.msh` file is created without opening the Gmsh GUI.
 
 All parameters from `PCBParams` are available as flags (e.g. `--ground-size 15`). Use `--help` to see the full list of options.
 
