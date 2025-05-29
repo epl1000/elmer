@@ -184,7 +184,7 @@ Mesh.CharacteristicLengthMax = {mesh_max};
 Mesh.CharacteristicLengthMin = {mesh_min};
 
 // Automatically generate the mesh when opened in Gmsh
-Generate 3;
+Mesh 3;
 Save \"pcb_model.msh\";
 
 // Add helpful comments for Elmer import
