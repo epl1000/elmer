@@ -4,7 +4,11 @@ from tkinter import ttk, filedialog, messagebox
 
 from config import PCBParams
 from gmsh_generator import generate_geo
-from utils import open_gmsh_with_file
+from utils import (
+    load_last_gmsh_path,
+    open_gmsh_with_file,
+    save_last_gmsh_path,
+)
 
 
 class PCBGmshGUI:
@@ -76,9 +80,14 @@ class PCBGmshGUI:
         dir_entry.grid(row=1, column=1, sticky=tk.W, padx=5, pady=5)
         ttk.Button(output_frame, text="Browse...", command=self.browse_directory).grid(row=1, column=2, padx=5, pady=5)
 
+        ttk.Label(output_frame, text="Gmsh Executable:").grid(row=2, column=0, sticky=tk.W, padx=5, pady=5)
+        self.gmsh_exe = tk.StringVar(value=load_last_gmsh_path() or "")
+        ttk.Entry(output_frame, textvariable=self.gmsh_exe, width=30).grid(row=2, column=1, sticky=tk.W, padx=5, pady=5)
+        ttk.Button(output_frame, text="Browse...", command=self.browse_gmsh_executable).grid(row=2, column=2, padx=5, pady=5)
+
         self.open_in_gmsh = tk.BooleanVar(value=True)
         ttk.Checkbutton(output_frame, text="Open in Gmsh after generation", variable=self.open_in_gmsh).grid(
-            row=2, column=0, columnspan=3, sticky=tk.W, padx=5, pady=5
+            row=3, column=0, columnspan=3, sticky=tk.W, padx=5, pady=5
         )
 
         preview_frame = ttk.LabelFrame(main_frame, text="Script Preview", padding="10")
@@ -109,6 +118,13 @@ class PCBGmshGUI:
         directory = filedialog.askdirectory(initialdir=self.output_dir.get())
         if directory:
             self.output_dir.set(directory)
+
+    def browse_gmsh_executable(self) -> None:
+        initial = os.path.dirname(self.gmsh_exe.get()) or os.getcwd()
+        path = filedialog.askopenfilename(initialdir=initial)
+        if path:
+            self.gmsh_exe.set(path)
+            save_last_gmsh_path(path)
 
     def _collect_params(self) -> PCBParams:
         return PCBParams(
@@ -145,7 +161,10 @@ class PCBGmshGUI:
                 f.write(script_content)
             messagebox.showinfo("Success", f"GMSH script has been generated at:\n{output_path}")
             if self.open_in_gmsh.get():
-                open_gmsh_with_file(output_path)
+                gmsh_path = self.gmsh_exe.get().strip() or None
+                if gmsh_path:
+                    save_last_gmsh_path(gmsh_path)
+                open_gmsh_with_file(output_path, gmsh_path)
         except Exception as exc:  # pragma: no cover - interface code
             messagebox.showerror("Error", f"Failed to generate script: {exc}")
 
