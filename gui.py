@@ -8,6 +8,8 @@ from utils import (
     load_last_gmsh_path,
     open_gmsh_with_file,
     save_last_gmsh_path,
+    load_last_elmer_path,
+    save_last_elmer_path,
 )
 
 
@@ -95,13 +97,18 @@ class PCBGmshGUI:
         ttk.Entry(output_frame, textvariable=self.gmsh_exe, width=30).grid(row=2, column=1, sticky=tk.W, padx=5, pady=5)
         ttk.Button(output_frame, text="Browse...", command=self.browse_gmsh_executable).grid(row=2, column=2, padx=5, pady=5)
 
+        ttk.Label(output_frame, text="Elmer Executable:").grid(row=3, column=0, sticky=tk.W, padx=5, pady=5)
+        self.elmer_exe = tk.StringVar(value=load_last_elmer_path() or "")
+        ttk.Entry(output_frame, textvariable=self.elmer_exe, width=30).grid(row=3, column=1, sticky=tk.W, padx=5, pady=5)
+        ttk.Button(output_frame, text="Browse...", command=self.browse_elmer_executable).grid(row=3, column=2, padx=5, pady=5)
+
         self.open_in_gmsh = tk.BooleanVar(value=True)
         ttk.Checkbutton(
             output_frame,
             text="Run Gmsh after generation",
             variable=self.open_in_gmsh,
         ).grid(
-            row=3, column=0, columnspan=3, sticky=tk.W, padx=5, pady=5
+            row=4, column=0, columnspan=3, sticky=tk.W, padx=5, pady=5
         )
 
         preview_frame = ttk.LabelFrame(content_frame, text="Script Preview", padding="10")
@@ -139,6 +146,13 @@ class PCBGmshGUI:
         if path:
             self.gmsh_exe.set(path)
             save_last_gmsh_path(path)
+
+    def browse_elmer_executable(self) -> None:
+        initial = os.path.dirname(self.elmer_exe.get()) or os.getcwd()
+        path = filedialog.askopenfilename(initialdir=initial)
+        if path:
+            self.elmer_exe.set(path)
+            save_last_elmer_path(path)
 
     def _collect_params(self) -> PCBParams:
         return PCBParams(
@@ -179,6 +193,9 @@ class PCBGmshGUI:
                 if gmsh_path:
                     save_last_gmsh_path(gmsh_path)
                 open_gmsh_with_file(output_path, gmsh_path)
+            elmer_path = self.elmer_exe.get().strip()
+            if elmer_path:
+                save_last_elmer_path(elmer_path)
         except Exception as exc:  # pragma: no cover - interface code
             messagebox.showerror("Error", f"Failed to generate script: {exc}")
 
