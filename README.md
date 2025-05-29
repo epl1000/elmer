@@ -21,7 +21,7 @@ All Python files now live in the repository root:
 2. Adjust the PCB parameters as needed.
 3. Specify the output directory and file name.
 4. (Optional) Use **Browse...** next to *Gmsh Executable* to locate `gmsh` if it is not on your `PATH`. The selected path will be remembered.
-5. Click **Generate GMSH Script**. If *Open in Gmsh after generation* is checked, the file opens in Gmsh automatically.
+5. Click **Generate GMSH Script**. If *Run Gmsh after generation* is checked, the file is processed by Gmsh in headless mode.
 
 The generated script defines four volumes: the ground with vias, the trace, the surrounding air, and the dielectric. Comments in the file list these IDs for reference.
 
@@ -32,12 +32,12 @@ A simple CLI is also available via `__main__.py`:
 python __main__.py -o pcb_model.geo [--open | --mesh] [--param value ...]
 ```
 
-Use `--mesh` to run Gmsh in batch mode so the `.msh` file is created without opening the Gmsh GUI.
+Both `--open` and `--mesh` run Gmsh in headless mode to generate the mesh without opening the Gmsh GUI.
 
 All parameters from `PCBParams` are available as flags (e.g. `--ground-size 15`). Use `--help` to see the full list of options.
 
-## Opening the file in Gmsh
-1. Open the generated `.geo` file in Gmsh (or let the GUI/CLI do this step).
+## Running the file in Gmsh
+1. You can still open the generated `.geo` file in Gmsh manually if you want to inspect it.
    The script now calls `Mesh 3;` to automatically generate a 3D mesh and save it as `pcb_model.msh`.
 
 ## Importing into Elmer
