@@ -16,7 +16,8 @@ class PCBGmshGUI:
         self.params = params or PCBParams()
         self.root = tk.Tk()
         self.root.title("PCB GMSH Generator")
-        self.root.geometry("650x750")
+        # Give the window a wider aspect ratio to better fit landscape screens
+        self.root.geometry("950x600")
         self._build_widgets()
 
     # ------------------------------------------------------------------
@@ -24,7 +25,14 @@ class PCBGmshGUI:
         main_frame = ttk.Frame(self.root, padding="20")
         main_frame.pack(fill=tk.BOTH, expand=True)
 
-        param_frame = ttk.LabelFrame(main_frame, text="PCB Parameters", padding="10")
+        # layout left-hand controls and right-hand preview side by side
+        content_frame = ttk.Frame(main_frame)
+        content_frame.pack(fill=tk.BOTH, expand=True)
+
+        left_frame = ttk.Frame(content_frame)
+        left_frame.pack(side=tk.LEFT, fill=tk.Y)
+
+        param_frame = ttk.LabelFrame(left_frame, text="PCB Parameters", padding="10")
         param_frame.pack(fill=tk.X, padx=5, pady=5)
 
         self._vars = {
@@ -60,14 +68,14 @@ class PCBGmshGUI:
             self._create_parameter_field(param_frame, label, self._vars[key], row)
             row += 1
 
-        mesh_frame = ttk.LabelFrame(main_frame, text="Mesh Options", padding="10")
+        mesh_frame = ttk.LabelFrame(left_frame, text="Mesh Options", padding="10")
         mesh_frame.pack(fill=tk.X, padx=5, pady=5)
         self._vars["mesh_size_min"] = tk.DoubleVar(value=self.params.mesh_size_min)
         self._vars["mesh_size_max"] = tk.DoubleVar(value=self.params.mesh_size_max)
         self._create_parameter_field(mesh_frame, "Min Mesh Size (mm):", self._vars["mesh_size_min"], 0)
         self._create_parameter_field(mesh_frame, "Max Mesh Size (mm):", self._vars["mesh_size_max"], 1)
 
-        output_frame = ttk.LabelFrame(main_frame, text="Output Options", padding="10")
+        output_frame = ttk.LabelFrame(left_frame, text="Output Options", padding="10")
         output_frame.pack(fill=tk.X, padx=5, pady=5)
 
         ttk.Label(output_frame, text="Output File:").grid(row=0, column=0, sticky=tk.W, padx=5, pady=5)
@@ -90,10 +98,10 @@ class PCBGmshGUI:
             row=3, column=0, columnspan=3, sticky=tk.W, padx=5, pady=5
         )
 
-        preview_frame = ttk.LabelFrame(main_frame, text="Script Preview", padding="10")
-        preview_frame.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+        preview_frame = ttk.LabelFrame(content_frame, text="Script Preview", padding="10")
+        preview_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5, pady=5)
 
-        self.preview_text = tk.Text(preview_frame, wrap=tk.NONE, height=15)
+        self.preview_text = tk.Text(preview_frame, wrap=tk.NONE)
         self.preview_text.pack(fill=tk.BOTH, expand=True)
         scrollbar = ttk.Scrollbar(self.preview_text, orient=tk.VERTICAL, command=self.preview_text.yview)
         self.preview_text.configure(yscrollcommand=scrollbar.set)
