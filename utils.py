@@ -4,6 +4,7 @@ import subprocess
 from typing import Optional
 
 CONFIG_PATH = os.path.join(os.path.expanduser("~"), ".pcb_gmsh_gui")
+ELMER_CONFIG_PATH = os.path.join(os.path.expanduser("~"), ".pcb_elmer_gui")
 
 
 def load_last_gmsh_path() -> Optional[str]:
@@ -20,6 +21,25 @@ def save_last_gmsh_path(path: str) -> None:
     """Persist the selected Gmsh executable path for future sessions."""
     try:
         with open(CONFIG_PATH, "w", encoding="utf-8") as f:
+            f.write(path)
+    except OSError:
+        pass
+
+
+def load_last_elmer_path() -> Optional[str]:
+    """Return the previously saved Elmer executable path if available."""
+    try:
+        with open(ELMER_CONFIG_PATH, "r", encoding="utf-8") as f:
+            path = f.read().strip()
+            return path or None
+    except OSError:
+        return None
+
+
+def save_last_elmer_path(path: str) -> None:
+    """Persist the selected Elmer executable path for future sessions."""
+    try:
+        with open(ELMER_CONFIG_PATH, "w", encoding="utf-8") as f:
             f.write(path)
     except OSError:
         pass
