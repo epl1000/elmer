@@ -96,7 +96,11 @@ class PCBGmshGUI:
         ttk.Button(output_frame, text="Browse...", command=self.browse_gmsh_executable).grid(row=2, column=2, padx=5, pady=5)
 
         self.open_in_gmsh = tk.BooleanVar(value=True)
-        ttk.Checkbutton(output_frame, text="Open in Gmsh after generation", variable=self.open_in_gmsh).grid(
+        ttk.Checkbutton(
+            output_frame,
+            text="Run Gmsh after generation",
+            variable=self.open_in_gmsh,
+        ).grid(
             row=3, column=0, columnspan=3, sticky=tk.W, padx=5, pady=5
         )
 

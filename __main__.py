@@ -20,7 +20,11 @@ def _add_param_arguments(parser: argparse.ArgumentParser) -> None:
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description="PCB Gmsh Generator")
     parser.add_argument("-o", "--output", default="pcb_model.geo", help="Output .geo file")
-    parser.add_argument("--open", action="store_true", help="Open the result in Gmsh")
+    parser.add_argument(
+        "--open",
+        action="store_true",
+        help="Run Gmsh on the result without launching the GUI",
+    )
     parser.add_argument(
         "--mesh",
         action="store_true",
