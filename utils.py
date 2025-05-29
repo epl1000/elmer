@@ -58,3 +58,35 @@ def open_gmsh_with_file(file_path: str, gmsh_path: Optional[str] = None) -> None
         print("Warning: Could not find Gmsh executable. Please open the file manually.")
     except Exception as exc:  # pragma: no cover - just logging
         print(f"Warning: Failed to open Gmsh: {exc}\nPlease open the file manually.")
+
+
+def run_gmsh_batch(file_path: str, gmsh_path: Optional[str] = None) -> None:
+    """Run Gmsh in batch mode to generate the mesh without launching the GUI."""
+    try:
+        if gmsh_path:
+            try:
+                subprocess.run([gmsh_path, file_path, "-"], check=True)
+                return
+            except (FileNotFoundError, subprocess.SubprocessError, subprocess.CalledProcessError):
+                pass
+
+        try:
+            subprocess.run(["gmsh", file_path, "-"], check=True)
+            return
+        except (FileNotFoundError, subprocess.SubprocessError, subprocess.CalledProcessError):
+            pass
+
+        if platform.system() == "Windows":
+            gmsh_exe_paths = [
+                r"E:\\Gmsh\\gmsh-4.13.1-Windows64\\gmsh-4.13.1-Windows64",
+                r"C:\\Program Files (x86)\\Gmsh\\gmsh.exe",
+                os.path.expanduser(r"~\\AppData\\Local\\Gmsh\\gmsh.exe"),
+            ]
+            for gmsh_path in gmsh_exe_paths:
+                if os.path.exists(gmsh_path):
+                    subprocess.run([gmsh_path, file_path, "-"], check=True)
+                    return
+
+        print("Warning: Could not find Gmsh executable. Please run Gmsh manually.")
+    except Exception as exc:  # pragma: no cover - just logging
+        print(f"Warning: Failed to run Gmsh: {exc}\nPlease run Gmsh manually.")
