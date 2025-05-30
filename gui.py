@@ -6,7 +6,7 @@ from config import PCBParams
 from gmsh_generator import generate_geo
 from utils import (
     load_last_gmsh_path,
-    open_gmsh_with_file,
+    run_gmsh_batch,
     save_last_gmsh_path,
     load_last_elmer_path,
     save_last_elmer_path,
@@ -192,7 +192,8 @@ class PCBGmshGUI:
                 gmsh_path = self.gmsh_exe.get().strip() or None
                 if gmsh_path:
                     save_last_gmsh_path(gmsh_path)
-                open_gmsh_with_file(output_path, gmsh_path)
+                run_gmsh_batch(output_path, gmsh_path)
+                messagebox.showinfo("Info", "mesh file created")
             elmer_path = self.elmer_exe.get().strip()
             if elmer_path:
                 save_last_elmer_path(elmer_path)
