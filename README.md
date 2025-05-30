@@ -26,6 +26,8 @@ All Python files now live in the repository root:
    mesh is created in headless mode and you'll be notified once the `.msh` file is
    written. The mesh file uses the same base name as the `.geo` script, e.g.
    `pcb_model_<timestamp>.msh`.
+   Each time you click **Generate GMSH Script**, the output file name is updated
+   with the current timestamp so repeated runs won't overwrite previous files.
 
 The generated script defines four volumes: the ground with vias, the trace, the surrounding air, and the dielectric. Comments in the file list these IDs for reference.
 

@@ -1,4 +1,5 @@
 import os
+import re
 from datetime import datetime
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
@@ -15,6 +16,8 @@ from utils import (
 
 
 class PCBGmshGUI:
+    _TIMESTAMP_RE = re.compile(r"(.+)_\d{8}_\d{6}$")
+
     def __init__(self, params: PCBParams | None = None) -> None:
         self.params = params or PCBParams()
         self.root = tk.Tk()
@@ -24,6 +27,14 @@ class PCBGmshGUI:
         self.root.geometry("950x800")
         self.root.minsize(950, 800)
         self._build_widgets()
+
+    # ------------------------------------------------------------------
+    def _next_output_name(self) -> str:
+        name, ext = os.path.splitext(self.output_file.get())
+        match = self._TIMESTAMP_RE.match(name)
+        base = match.group(1) if match else name
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        return f"{base}_{timestamp}{ext or '.geo'}"
 
     # ------------------------------------------------------------------
     def _build_widgets(self) -> None:
@@ -186,7 +197,9 @@ class PCBGmshGUI:
 
     def generate_script(self) -> None:
         try:
-            output_path = os.path.join(self.output_dir.get(), self.output_file.get())
+            new_name = self._next_output_name()
+            self.output_file.set(new_name)
+            output_path = os.path.join(self.output_dir.get(), new_name)
             script_content = generate_geo(self._collect_params())
             with open(output_path, "w") as f:
                 f.write(script_content)
