@@ -144,7 +144,8 @@ def run_elmergrid(msh_file: str, elmergrid_path: Optional[str] = None) -> Path:
 
     mesh_path = Path(msh_file)
     output_dir = mesh_path.with_suffix("")
-    args = ["4", "2", str(mesh_path)]
+    # Use option 14 to convert Gmsh meshes with automatic cleaning
+    args = ["14", "2", str(mesh_path)]
 
     def _attempt(exe: str) -> bool:
         try:
