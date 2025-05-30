@@ -1,6 +1,6 @@
 import argparse
 from pathlib import Path
-import uuid
+from datetime import datetime
 
 from config import PCBParams
 from gmsh_generator import generate_geo
@@ -20,7 +20,8 @@ def _add_param_arguments(parser: argparse.ArgumentParser) -> None:
 
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description="PCB Gmsh Generator")
-    default_name = f"pcb_model_{uuid.uuid4().hex}.geo"
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    default_name = f"pcb_model_{timestamp}.geo"
     parser.add_argument("-o", "--output", default=default_name, help="Output .geo file")
     parser.add_argument(
         "--open",
