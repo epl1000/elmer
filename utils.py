@@ -107,14 +107,18 @@ def run_gmsh(geo_file: str, output_dir: str, gmsh_path: Optional[str] = None) ->
     def _attempt(exe: str) -> bool:
         try:
             subprocess.run([exe, *args], check=True)
-            return True
-        except (
-            FileNotFoundError,
-            subprocess.SubprocessError,
-            subprocess.CalledProcessError,
-            PermissionError,
-        ):
+        except FileNotFoundError:
             return False
+        except PermissionError:
+            return False
+        except subprocess.CalledProcessError:
+            # Some versions of Gmsh return a non-zero exit code even when the
+            # mesh file has been written. Treat this as success if the file
+            # exists afterwards.
+            return output_path.exists()
+        except subprocess.SubprocessError:
+            return False
+        return output_path.exists()
 
     if gmsh_path and _attempt(gmsh_path):
         return output_path
