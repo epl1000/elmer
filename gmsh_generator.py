@@ -185,7 +185,7 @@ Mesh.CharacteristicLengthMin = {mesh_min};
 
 // Automatically generate the mesh when opened in Gmsh
 Mesh 3;
-Save \"pcb_model.msh\";
+// Mesh is saved externally using the -o command line option
 
 // Add helpful comments for Elmer import
 Printf("//");
