@@ -19,12 +19,13 @@ All Python files now live in the repository root:
 ## Running the GUI
 1. Execute `python main.py` to launch the GUI.
 2. Adjust the PCB parameters as needed.
-3. Specify the output directory and file name.
+3. Specify the output directory and file name. By default a name like
+   `pcb_model_<uuid>.geo` is pre-filled.
 4. (Optional) Use **Browse...** next to *Gmsh Executable* to locate `gmsh` if it is not on your `PATH`. The selected path will be remembered.
 5. Click **Generate GMSH Script**. If *Run Gmsh after generation* is checked, the
    mesh is created in headless mode and you'll be notified once the `.msh` file is
-   written. Each run produces a uniquely named mesh such as
-   `mesh_<uuid>.msh`.
+   written. The mesh file uses the same base name as the `.geo` script, e.g.
+   `pcb_model_<uuid>.msh`.
 
 The generated script defines four volumes: the ground with vias, the trace, the surrounding air, and the dielectric. Comments in the file list these IDs for reference.
 
@@ -32,7 +33,7 @@ The generated script defines four volumes: the ground with vias, the trace, the 
 A simple CLI is also available via `__main__.py`:
 
 ```bash
-python __main__.py -o pcb_model.geo [--open | --mesh] [--param value ...]
+python __main__.py -o pcb_model_<uuid>.geo [--open | --mesh] [--param value ...]
 ```
 
 Both `--open` and `--mesh` run Gmsh in headless mode to generate the mesh without opening the Gmsh GUI.
@@ -41,11 +42,14 @@ All parameters from `PCBParams` are available as flags (e.g. `--ground-size 15`)
 
 ## Running the file in Gmsh
 1. You can still open the generated `.geo` file in Gmsh manually if you want to inspect it.
-   The script now calls `Mesh 3;` so the mesh is created automatically. The mesh
-   file name is determined by the command-line `-o` option or the name generated
-   by the GUI.
+
+   The script now calls `Mesh 3;` to automatically generate a 3D mesh and save it
+   alongside the script as `<output_basename>.msh`.
 
 ## Importing into Elmer
-1. Convert the mesh using `ElmerGrid 4 2 <mesh_file.msh>`.
+1. Convert the mesh using `ElmerGrid 4 2 <output_basename>.msh`.
+
+
+
 2. Open the generated mesh directory in ElmerGUI or reference it in your simulation setup.
 3. Assign bodies according to the volume IDs noted in the `.geo` file.
