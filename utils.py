@@ -1,7 +1,6 @@
 import os
 import platform
 import subprocess
-import uuid
 from pathlib import Path
 from typing import Optional
 
@@ -92,8 +91,8 @@ def run_gmsh(
 ) -> Path:
     """Run Gmsh on ``geo_file`` and return the generated ``.msh`` path."""
 
-    unique_name = f"mesh_{uuid.uuid4().hex}.msh"
-    output_path = Path(output_dir) / unique_name
+    base_name = Path(geo_file).stem
+    output_path = Path(output_dir) / f"{base_name}.msh"
 
     args = [geo_file, "-3", "-o", str(output_path)]
 
