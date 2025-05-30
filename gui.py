@@ -9,6 +9,7 @@ from gmsh_generator import generate_geo
 from utils import (
     load_last_gmsh_path,
     run_gmsh,
+    run_elmergrid,
     save_last_gmsh_path,
     load_last_elmer_path,
     save_last_elmer_path,
@@ -214,11 +215,19 @@ class PCBGmshGUI:
                         "Mesh Created",
                         f"Mesh has been generated at:\n{mesh_path}",
                     )
+                    elmer_path = self.elmer_exe.get().strip() or None
+                    if elmer_path:
+                        save_last_elmer_path(elmer_path)
+                    try:
+                        elmer_dir = run_elmergrid(str(mesh_path), elmer_path)
+                        messagebox.showinfo(
+                            "ElmerGrid Completed",
+                            f"Elmer mesh has been created in:\n{elmer_dir}",
+                        )
+                    except Exception as exc:
+                        messagebox.showerror("Error", f"Failed to run ElmerGrid: {exc}")
                 except Exception as exc:
                     messagebox.showerror("Error", f"Failed to run Gmsh: {exc}")
-            elmer_path = self.elmer_exe.get().strip()
-            if elmer_path:
-                save_last_elmer_path(elmer_path)
         except Exception as exc:  # pragma: no cover - interface code
             messagebox.showerror("Error", f"Failed to generate script: {exc}")
 

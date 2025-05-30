@@ -137,3 +137,41 @@ def run_gmsh(geo_file: str, output_dir: str, gmsh_path: Optional[str] = None) ->
                 return output_path
 
     raise RuntimeError("Could not run Gmsh")
+
+
+def run_elmergrid(msh_file: str, elmergrid_path: Optional[str] = None) -> Path:
+    """Run ElmerGrid on ``msh_file`` and return the directory of the converted mesh."""
+
+    mesh_path = Path(msh_file)
+    output_dir = mesh_path.with_suffix("")
+    args = ["4", "2", str(mesh_path)]
+
+    def _attempt(exe: str) -> bool:
+        try:
+            subprocess.run([exe, *args], check=True)
+        except FileNotFoundError:
+            return False
+        except PermissionError:
+            return False
+        except subprocess.CalledProcessError:
+            return output_dir.exists()
+        except subprocess.SubprocessError:
+            return False
+        return output_dir.exists()
+
+    if elmergrid_path and _attempt(elmergrid_path):
+        return output_dir
+
+    if _attempt("ElmerGrid"):
+        return output_dir
+
+    if platform.system() == "Windows":
+        elmer_paths = [
+            os.path.expanduser(r"~\\AppData\\Local\\Elmer\\bin\\ElmerGrid.exe"),
+            r"C:\\Program Files\\Elmer\\bin\\ElmerGrid.exe",
+        ]
+        for exe in elmer_paths:
+            if os.path.exists(exe) and _attempt(exe):
+                return output_dir
+
+    raise RuntimeError("Could not run ElmerGrid")
