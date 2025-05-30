@@ -20,12 +20,12 @@ All Python files now live in the repository root:
 1. Execute `python main.py` to launch the GUI.
 2. Adjust the PCB parameters as needed.
 3. Specify the output directory and file name. By default a name like
-   `pcb_model_<uuid>.geo` is pre-filled.
+   `pcb_model_<timestamp>.geo` (e.g. `pcb_model_20240108_142500.geo`) is pre-filled.
 4. (Optional) Use **Browse...** next to *Gmsh Executable* to locate `gmsh` if it is not on your `PATH`. The selected path will be remembered.
 5. Click **Generate GMSH Script**. If *Run Gmsh after generation* is checked, the
    mesh is created in headless mode and you'll be notified once the `.msh` file is
    written. The mesh file uses the same base name as the `.geo` script, e.g.
-   `pcb_model_<uuid>.msh`.
+   `pcb_model_<timestamp>.msh`.
 
 The generated script defines four volumes: the ground with vias, the trace, the surrounding air, and the dielectric. Comments in the file list these IDs for reference.
 
@@ -33,7 +33,7 @@ The generated script defines four volumes: the ground with vias, the trace, the 
 A simple CLI is also available via `__main__.py`:
 
 ```bash
-python __main__.py -o pcb_model_<uuid>.geo [--open | --mesh] [--param value ...]
+python __main__.py -o pcb_model_<timestamp>.geo [--open | --mesh] [--param value ...]
 ```
 
 Both `--open` and `--mesh` run Gmsh in headless mode to generate the mesh without opening the Gmsh GUI.

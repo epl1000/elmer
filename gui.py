@@ -1,5 +1,5 @@
 import os
-import uuid
+from datetime import datetime
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 
@@ -84,7 +84,8 @@ class PCBGmshGUI:
         output_frame.pack(fill=tk.X, padx=5, pady=5)
 
         ttk.Label(output_frame, text="Output File:").grid(row=0, column=0, sticky=tk.W, padx=5, pady=5)
-        default_name = f"pcb_model_{uuid.uuid4().hex}.geo"
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        default_name = f"pcb_model_{timestamp}.geo"
         self.output_file = tk.StringVar(value=default_name)
         ttk.Entry(output_frame, textvariable=self.output_file, width=30).grid(row=0, column=1, sticky=tk.W, padx=5, pady=5)
 
