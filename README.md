@@ -41,9 +41,11 @@ All parameters from `PCBParams` are available as flags (e.g. `--ground-size 15`)
 
 ## Running the file in Gmsh
 1. You can still open the generated `.geo` file in Gmsh manually if you want to inspect it.
-   The script now calls `Mesh 3;` to automatically generate a 3D mesh and save it as `pcb_model.msh`.
+   The script now calls `Mesh 3;` so the mesh is created automatically. The mesh
+   file name is determined by the command-line `-o` option or the name generated
+   by the GUI.
 
 ## Importing into Elmer
-1. Convert the mesh using `ElmerGrid 4 2 pcb_model.msh`.
+1. Convert the mesh using `ElmerGrid 4 2 <mesh_file.msh>`.
 2. Open the generated mesh directory in ElmerGUI or reference it in your simulation setup.
 3. Assign bodies according to the volume IDs noted in the `.geo` file.
