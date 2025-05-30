@@ -35,10 +35,10 @@ The generated script defines four volumes: the ground with vias, the trace, the 
 A simple CLI is also available via `__main__.py`:
 
 ```bash
-python __main__.py -o pcb_model_<timestamp>.geo [--open | --mesh] [--param value ...]
+python __main__.py -o pcb_model_<timestamp>.geo [--open | --mesh | --elmergrid] [--param value ...]
 ```
 
-Both `--open` and `--mesh` run Gmsh in headless mode to generate the mesh without opening the Gmsh GUI.
+Both `--open` and `--mesh` run Gmsh in headless mode to generate the mesh without opening the Gmsh GUI. Use `--elmergrid` to additionally convert the mesh for Elmer using `ElmerGrid`.
 
 All parameters from `PCBParams` are available as flags (e.g. `--ground-size 15`). Use `--help` to see the full list of options.
 
@@ -49,7 +49,7 @@ All parameters from `PCBParams` are available as flags (e.g. `--ground-size 15`)
    alongside the script as `<output_basename>.msh`.
 
 ## Importing into Elmer
-1. Convert the mesh using `ElmerGrid 4 2 <output_basename>.msh`.
+1. Convert the mesh using `ElmerGrid 4 2 <output_basename>.msh` or run the CLI with `--elmergrid` to do this automatically.
 
 
 
