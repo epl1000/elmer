@@ -62,13 +62,23 @@ def run_gmsh_batch(file_path: str, gmsh_path: Optional[str] = None) -> None:
             try:
                 subprocess.run([gmsh_path, file_path, "-nopopup", "-"], check=True)
                 return
-            except (FileNotFoundError, subprocess.SubprocessError, subprocess.CalledProcessError):
+            except (
+                FileNotFoundError,
+                subprocess.SubprocessError,
+                subprocess.CalledProcessError,
+                PermissionError,
+            ):
                 pass
 
         try:
             subprocess.run(["gmsh", file_path, "-nopopup", "-"], check=True)
             return
-        except (FileNotFoundError, subprocess.SubprocessError, subprocess.CalledProcessError):
+        except (
+            FileNotFoundError,
+            subprocess.SubprocessError,
+            subprocess.CalledProcessError,
+            PermissionError,
+        ):
             pass
 
         if platform.system() == "Windows":
@@ -87,9 +97,7 @@ def run_gmsh_batch(file_path: str, gmsh_path: Optional[str] = None) -> None:
         print(f"Warning: Failed to run Gmsh: {exc}\nPlease run Gmsh manually.")
 
 
-def run_gmsh(
-    geo_file: str, output_dir: str, gmsh_path: Optional[str] = None
-) -> Path:
+def run_gmsh(geo_file: str, output_dir: str, gmsh_path: Optional[str] = None) -> Path:
     """Run Gmsh on ``geo_file`` and return the generated ``.msh`` path."""
 
     unique_name = f"mesh_{uuid.uuid4().hex}.msh"
@@ -101,7 +109,12 @@ def run_gmsh(
         try:
             subprocess.run([exe, *args], check=True)
             return True
-        except (FileNotFoundError, subprocess.SubprocessError, subprocess.CalledProcessError):
+        except (
+            FileNotFoundError,
+            subprocess.SubprocessError,
+            subprocess.CalledProcessError,
+            PermissionError,
+        ):
             return False
 
     if gmsh_path and _attempt(gmsh_path):
