@@ -149,8 +149,8 @@ Coherence;
 //------------------------- 4) Define Physical Volumes -------------------------//
 //   ground_vias[]  -> the union of ground plane + all vias (ID = 1)
 //   trace (which is volume #3, ID = 2)
-//   dielectric[]   -> new volume for the gap (ID = 4)
-//   air[]          -> bounding sphere minus the PCB (ID = 3)
+//   dielectric[]   -> new volume for the gap (ID = 3)
+//   air[]          -> bounding sphere minus the PCB (ID = 4)
 
 Physical Volume("Ground and Vias", 1) = {{ ground_vias[] }};
 Physical Volume("Trace", 2)          = {{ trace }};
@@ -185,7 +185,7 @@ Mesh.CharacteristicLengthMin = {mesh_min};
 
 // Automatically generate the mesh when opened in Gmsh
 Mesh 3;
-Save \"pcb_model.msh\";
+// Mesh is saved externally using the -o command line option
 
 // Add helpful comments for Elmer import
 Printf("//");
