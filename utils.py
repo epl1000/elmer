@@ -148,7 +148,7 @@ def run_elmergrid(msh_file: str, elmergrid_path: Optional[str] = None) -> Path:
         "14",
         "2",
         str(mesh_path),
-        "-gmsh4",
+        "-autoclean",
         "-boundnames",
     ]
 
