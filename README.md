@@ -53,5 +53,6 @@ All parameters from `PCBParams` are available as flags (e.g. `--ground-size 15`)
 
 
 
+
 2. Open the generated mesh directory in ElmerGUI or reference it in your simulation setup.
 3. Assign bodies according to the volume IDs noted in the `.geo` file.
