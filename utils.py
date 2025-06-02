@@ -148,7 +148,7 @@ def run_elmergrid(msh_file: str, elmergrid_path: Optional[str] = None) -> Path:
         "14",
         "2",
         str(mesh_path),
-        "-gmsh4",
+        "-autoclean",
         "-boundnames",
     ]
 
@@ -168,8 +168,9 @@ def run_elmergrid(msh_file: str, elmergrid_path: Optional[str] = None) -> Path:
     if elmergrid_path and _attempt(elmergrid_path):
         return output_dir
 
-    if _attempt("ElmerGrid"):
-        return output_dir
+    for exe in ("ElmerGrid", "elmergrid"):
+        if _attempt(exe):
+            return output_dir
 
     if platform.system() == "Windows":
         elmer_paths = [
