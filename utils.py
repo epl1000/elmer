@@ -144,7 +144,13 @@ def run_elmergrid(msh_file: str, elmergrid_path: Optional[str] = None) -> Path:
 
     mesh_path = Path(msh_file)
     output_dir = mesh_path.with_suffix("")
-    args = ["14", "2", str(mesh_path)]
+    args = [
+        "14",
+        "2",
+        str(mesh_path),
+        "-gmsh4",
+        "-boundnames",
+    ]
 
     def _attempt(exe: str) -> bool:
         try:

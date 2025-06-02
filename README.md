@@ -49,7 +49,7 @@ All parameters from `PCBParams` are available as flags (e.g. `--ground-size 15`)
    alongside the script as `<output_basename>.msh`.
 
 ## Importing into Elmer
-1. Convert the mesh using `ElmerGrid 14 2 <output_basename>.msh` or run the CLI with `--elmergrid` to do this automatically.
+1. Convert the mesh using `ElmerGrid 14 2 <output_basename>.msh -gmsh4 -boundnames` or run the CLI with `--elmergrid` to do this automatically.
 
 
 
