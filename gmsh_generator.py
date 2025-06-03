@@ -176,12 +176,13 @@ Field[3] = Min;
 Field[3].FieldsList = {{2}};
 Background Field = 3;
 
-Mesh.Algorithm = 6;
-Mesh.Algorithm3D = 10;
-Mesh.OptimizeNetgen = 1;
-Mesh.Optimize = 1;
-Mesh.CharacteristicLengthMax = {mesh_max};
-Mesh.CharacteristicLengthMin = {mesh_min};
+    Mesh.Algorithm = 6;
+    Mesh.Algorithm3D = 10;
+    Mesh.OptimizeNetgen = 1;
+    Mesh.Optimize = 1;
+    Mesh.Format = 2;
+    Mesh.CharacteristicLengthMax = {mesh_max};
+    Mesh.CharacteristicLengthMin = {mesh_min};
 
 // Automatically generate the mesh when opened in Gmsh
 Mesh 3;
