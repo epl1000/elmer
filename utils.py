@@ -139,46 +139,38 @@ def run_gmsh(geo_file: str, output_dir: str, gmsh_path: Optional[str] = None) ->
     raise RuntimeError("Could not run Gmsh")
 
 
-def run_elmergrid(msh_file: str, elmergrid_path: Optional[str] = None) -> Path:
-    """Run ElmerGrid on ``msh_file`` and return the directory of the converted mesh."""
-
-    mesh_path = Path(msh_file)
-    output_dir = mesh_path.with_suffix("")
-    args = [
-        "14",
-        "2",
-        str(mesh_path),
-        "-autoclean",
-        "-boundnames",
-    ]
+def run_elmer_gui(msh_file: str, elmergrid_path: Optional[str] = None) -> None:
+    """Launch ElmerGUI with ``msh_file``."""
 
     def _attempt(exe: str) -> bool:
         try:
-            subprocess.run([exe, *args], check=True)
+            subprocess.Popen([exe, msh_file])
         except FileNotFoundError:
             return False
         except PermissionError:
             return False
-        except subprocess.CalledProcessError:
-            return output_dir.exists()
         except subprocess.SubprocessError:
             return False
-        return output_dir.exists()
+        return True
 
-    if elmergrid_path and _attempt(elmergrid_path):
-        return output_dir
+    if elmergrid_path:
+        gui_candidate = Path(elmergrid_path).with_name(
+            "ElmerGUI.exe" if platform.system() == "Windows" else "ElmerGUI"
+        )
+        if _attempt(str(gui_candidate)):
+            return
 
-    for exe in ("ElmerGrid", "elmergrid"):
+    for exe in ("ElmerGUI", "elmergui"):
         if _attempt(exe):
-            return output_dir
+            return
 
     if platform.system() == "Windows":
         elmer_paths = [
-            os.path.expanduser(r"~\\AppData\\Local\\Elmer\\bin\\ElmerGrid.exe"),
-            r"C:\\Program Files\\Elmer\\bin\\ElmerGrid.exe",
+            os.path.expanduser(r"~\\AppData\\Local\\Elmer\\bin\\ElmerGUI.exe"),
+            r"C:\\Program Files\\Elmer\\bin\\ElmerGUI.exe",
         ]
         for exe in elmer_paths:
             if os.path.exists(exe) and _attempt(exe):
-                return output_dir
+                return
 
-    raise RuntimeError("Could not run ElmerGrid")
+    raise RuntimeError("Could not run ElmerGUI")
