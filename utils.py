@@ -139,30 +139,41 @@ def run_gmsh(geo_file: str, output_dir: str, gmsh_path: Optional[str] = None) ->
     raise RuntimeError("Could not run Gmsh")
 
 
-def run_elmer_gui(msh_file: str, elmergrid_path: Optional[str] = None) -> None:
-    """Launch ElmerGUI with ``msh_file``."""
+def run_elmer_gui(
+    msh_file: str, elmergrid_path: Optional[str] = None, verbose: bool = False
+) -> str:
+    """Launch ElmerGUI with ``msh_file`` and capture any output."""
 
-    def _attempt(exe: str) -> bool:
+    def _attempt(exe: str) -> Optional[str]:
+        args = [exe, msh_file]
+        if verbose:
+            args.append("--verbose")
         try:
-            subprocess.Popen([exe, msh_file])
+            proc = subprocess.run(args, capture_output=True, text=True)
         except FileNotFoundError:
-            return False
+            return None
         except PermissionError:
-            return False
+            return None
         except subprocess.SubprocessError:
-            return False
-        return True
+            return None
+
+        output = (proc.stdout or "") + (proc.stderr or "")
+        if proc.returncode != 0:
+            raise RuntimeError(output.strip() or f"{exe} exited with code {proc.returncode}")
+        return output
 
     if elmergrid_path:
         gui_candidate = Path(elmergrid_path).with_name(
             "ElmerGUI.exe" if platform.system() == "Windows" else "ElmerGUI"
         )
-        if _attempt(str(gui_candidate)):
-            return
+        result = _attempt(str(gui_candidate))
+        if result is not None:
+            return result
 
     for exe in ("ElmerGUI", "elmergui"):
-        if _attempt(exe):
-            return
+        result = _attempt(exe)
+        if result is not None:
+            return result
 
     if platform.system() == "Windows":
         elmer_paths = [
@@ -170,7 +181,9 @@ def run_elmer_gui(msh_file: str, elmergrid_path: Optional[str] = None) -> None:
             r"C:\\Program Files\\Elmer\\bin\\ElmerGUI.exe",
         ]
         for exe in elmer_paths:
-            if os.path.exists(exe) and _attempt(exe):
-                return
+            if os.path.exists(exe):
+                result = _attempt(exe)
+                if result is not None:
+                    return result
 
     raise RuntimeError("Could not run ElmerGUI")

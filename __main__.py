@@ -43,6 +43,11 @@ def main(argv: list[str] | None = None) -> None:
         default="",
         help="Path to the ElmerGrid executable (used to locate ElmerGUI)",
     )
+    parser.add_argument(
+        "--elmer-verbose",
+        action="store_true",
+        help="Capture verbose output from ElmerGUI",
+    )
     parser.add_argument("--gui", action="store_true", help="Launch GUI instead of CLI")
     _add_param_arguments(parser)
     args = parser.parse_args(argv)
@@ -61,7 +66,11 @@ def main(argv: list[str] | None = None) -> None:
     if mesh_needed:
         mesh_path = run_gmsh(str(output_path), output_path.parent)
         if args.elmergrid:
-            run_elmer_gui(str(mesh_path), args.elmer_exe or None)
+            output = run_elmer_gui(
+                str(mesh_path), args.elmer_exe or None, verbose=args.elmer_verbose
+            )
+            if output.strip():
+                print("ElmerGUI output:\n" + output)
     elif args.open:
         open_gmsh_with_file(str(output_path))
 

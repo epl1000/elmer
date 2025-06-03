@@ -38,7 +38,7 @@ A simple CLI is also available via `__main__.py`:
 python __main__.py -o pcb_model_<timestamp>.geo [--open | --mesh | --elmergrid] [--param value ...]
 ```
 
-Both `--open` and `--mesh` run Gmsh in headless mode to generate the mesh without opening the Gmsh GUI. Use `--elmergrid` to launch `ElmerGUI` with the resulting `.msh` file.
+Both `--open` and `--mesh` run Gmsh in headless mode to generate the mesh without opening the Gmsh GUI. Use `--elmergrid` to launch `ElmerGUI` with the resulting `.msh` file. Add `--elmer-verbose` to capture any messages printed by ElmerGUI.
 
 All parameters from `PCBParams` are available as flags (e.g. `--ground-size 15`). Use `--help` to see the full list of options.
 
@@ -51,4 +51,5 @@ All parameters from `PCBParams` are available as flags (e.g. `--ground-size 15`)
 ## Importing into Elmer
 
 1. Run the CLI with `--elmergrid` (or launch `ElmerGUI` manually) to open the generated `.msh` file directly in ElmerGUI.
-2. Assign bodies according to the volume IDs noted in the `.geo` file.
+2. If ElmerGUI crashes, re-run the command with `--elmer-verbose` to capture its output.
+3. Assign bodies according to the volume IDs noted in the `.geo` file.
