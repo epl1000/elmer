@@ -23,9 +23,9 @@ All Python files now live in the repository root:
    `pcb_model_<timestamp>.geo` (e.g. `pcb_model_20240108_142500.geo`) is pre-filled.
 4. (Optional) Use **Browse...** next to *Gmsh Executable* to locate `gmsh` if it is not on your `PATH`. The selected path will be remembered.
 5. Click **Generate GMSH Script**. If *Run Gmsh after generation* is checked, the
-   mesh is created in headless mode and you'll be notified once the `.msh` file is
+   mesh is created in headless mode and you'll be notified once the `.unv` file is
    written. The mesh file uses the same base name as the `.geo` script, e.g.
-   `pcb_model_<timestamp>.msh`.
+   `pcb_model_<timestamp>.unv`.
    Each time you click **Generate GMSH Script**, the output file name is updated
    with the current timestamp so repeated runs won't overwrite previous files.
 
@@ -38,7 +38,7 @@ A simple CLI is also available via `__main__.py`:
 python __main__.py -o pcb_model_<timestamp>.geo [--open | --mesh | --elmergrid] [--param value ...]
 ```
 
-Both `--open` and `--mesh` run Gmsh in headless mode to generate the mesh without opening the Gmsh GUI. Use `--elmergrid` to launch `ElmerGUI` with the resulting `.msh` file. Add `--elmer-verbose` to capture any messages printed by ElmerGUI.
+Both `--open` and `--mesh` run Gmsh in headless mode to generate the mesh without opening the Gmsh GUI. Use `--elmergrid` to run `ElmerGrid` on the resulting `.unv` file.
 
 All parameters from `PCBParams` are available as flags (e.g. `--ground-size 15`). Use `--help` to see the full list of options.
 
@@ -46,10 +46,9 @@ All parameters from `PCBParams` are available as flags (e.g. `--ground-size 15`)
 1. You can still open the generated `.geo` file in Gmsh manually if you want to inspect it.
 
    The script now calls `Mesh 3;` to automatically generate a 3D mesh and save it
-   alongside the script as `<output_basename>.msh`.
+   alongside the script as `<output_basename>.unv`.
 
 ## Importing into Elmer
 
-1. Run the CLI with `--elmergrid` (or launch `ElmerGUI` manually) to open the generated `.msh` file directly in ElmerGUI.
-2. If ElmerGUI crashes, re-run the command with `--elmer-verbose` to capture its output.
-3. Assign bodies according to the volume IDs noted in the `.geo` file.
+1. Run the CLI with `--elmergrid` (or invoke `ElmerGrid` manually) to import the generated `.unv` file.
+2. Assign bodies according to the volume IDs noted in the `.geo` file.

@@ -5,7 +5,7 @@ from datetime import datetime
 from config import PCBParams
 from gmsh_generator import generate_geo
 from gui import PCBGmshGUI
-from utils import open_gmsh_with_file, run_gmsh, run_elmer_gui
+from utils import open_gmsh_with_file, run_gmsh, run_elmer_grid
 
 
 def _add_param_arguments(parser: argparse.ArgumentParser) -> None:
@@ -36,17 +36,12 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument(
         "--elmergrid",
         action="store_true",
-        help="Open the generated mesh in ElmerGUI",
+        help="Run ElmerGrid on the generated mesh",
     )
     parser.add_argument(
         "--elmer-exe",
         default="",
-        help="Path to the ElmerGrid executable (used to locate ElmerGUI)",
-    )
-    parser.add_argument(
-        "--elmer-verbose",
-        action="store_true",
-        help="Capture verbose output from ElmerGUI",
+        help="Path to the ElmerGrid executable",
     )
     parser.add_argument("--gui", action="store_true", help="Launch GUI instead of CLI")
     _add_param_arguments(parser)
@@ -66,11 +61,9 @@ def main(argv: list[str] | None = None) -> None:
     if mesh_needed:
         mesh_path = run_gmsh(str(output_path), output_path.parent)
         if args.elmergrid:
-            output = run_elmer_gui(
-                str(mesh_path), args.elmer_exe or None, verbose=args.elmer_verbose
-            )
+            output = run_elmer_grid(str(mesh_path), args.elmer_exe or None)
             if output.strip():
-                print("ElmerGUI output:\n" + output)
+                print("ElmerGrid output:\n" + output)
     elif args.open:
         open_gmsh_with_file(str(output_path))
 
