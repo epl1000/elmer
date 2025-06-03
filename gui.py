@@ -219,7 +219,11 @@ class PCBGmshGUI:
                     if elmer_path:
                         save_last_elmer_path(elmer_path)
                     try:
-                        run_elmer_gui(str(mesh_path), elmer_path)
+                        output = run_elmer_gui(
+                            str(mesh_path), elmer_path, verbose=True
+                        )
+                        if output.strip():
+                            messagebox.showinfo("ElmerGUI Output", output)
                     except Exception as exc:
                         messagebox.showerror("Error", f"Failed to run ElmerGUI: {exc}")
                 except Exception as exc:
