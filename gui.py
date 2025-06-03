@@ -9,7 +9,7 @@ from gmsh_generator import generate_geo
 from utils import (
     load_last_gmsh_path,
     run_gmsh,
-    run_elmer_gui,
+    run_elmer_grid,
     save_last_gmsh_path,
     load_last_elmer_path,
     save_last_elmer_path,
@@ -219,13 +219,11 @@ class PCBGmshGUI:
                     if elmer_path:
                         save_last_elmer_path(elmer_path)
                     try:
-                        output = run_elmer_gui(
-                            str(mesh_path), elmer_path, verbose=True
-                        )
+                        output = run_elmer_grid(str(mesh_path), elmer_path)
                         if output.strip():
-                            messagebox.showinfo("ElmerGUI Output", output)
+                            messagebox.showinfo("ElmerGrid Output", output)
                     except Exception as exc:
-                        messagebox.showerror("Error", f"Failed to run ElmerGUI: {exc}")
+                        messagebox.showerror("Error", f"Failed to run ElmerGrid: {exc}")
                 except Exception as exc:
                     messagebox.showerror("Error", f"Failed to run Gmsh: {exc}")
         except Exception as exc:  # pragma: no cover - interface code

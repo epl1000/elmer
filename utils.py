@@ -97,12 +97,12 @@ def run_gmsh_batch(file_path: str, gmsh_path: Optional[str] = None) -> None:
 
 
 def run_gmsh(geo_file: str, output_dir: str, gmsh_path: Optional[str] = None) -> Path:
-    """Run Gmsh on ``geo_file`` and return the generated ``.msh`` path."""
+    """Run Gmsh on ``geo_file`` and return the generated ``.unv`` path."""
 
     base_name = Path(geo_file).stem
-    output_path = Path(output_dir) / f"{base_name}.msh"
+    output_path = Path(output_dir) / f"{base_name}.unv"
 
-    args = [geo_file, "-3", "-o", str(output_path)]
+    args = [geo_file, "-3", "-o", str(output_path), "-format", "unv"]
 
     def _attempt(exe: str) -> bool:
         try:
@@ -139,15 +139,11 @@ def run_gmsh(geo_file: str, output_dir: str, gmsh_path: Optional[str] = None) ->
     raise RuntimeError("Could not run Gmsh")
 
 
-def run_elmer_gui(
-    msh_file: str, elmergrid_path: Optional[str] = None, verbose: bool = False
-) -> str:
-    """Launch ElmerGUI with ``msh_file`` and capture any output."""
+def run_elmer_grid(unv_file: str, elmergrid_path: Optional[str] = None) -> str:
+    """Run ElmerGrid on ``unv_file`` and capture any output."""
 
     def _attempt(exe: str) -> Optional[str]:
-        args = [exe, msh_file]
-        if verbose:
-            args.append("--verbose")
+        args = [exe, "8", "2", unv_file, "-autoclean"]
         try:
             proc = subprocess.run(args, capture_output=True, text=True)
         except FileNotFoundError:
@@ -163,22 +159,19 @@ def run_elmer_gui(
         return output
 
     if elmergrid_path:
-        gui_candidate = Path(elmergrid_path).with_name(
-            "ElmerGUI.exe" if platform.system() == "Windows" else "ElmerGUI"
-        )
-        result = _attempt(str(gui_candidate))
+        result = _attempt(elmergrid_path)
         if result is not None:
             return result
 
-    for exe in ("ElmerGUI", "elmergui"):
+    for exe in ("ElmerGrid", "elmergrid"):
         result = _attempt(exe)
         if result is not None:
             return result
 
     if platform.system() == "Windows":
         elmer_paths = [
-            os.path.expanduser(r"~\\AppData\\Local\\Elmer\\bin\\ElmerGUI.exe"),
-            r"C:\\Program Files\\Elmer\\bin\\ElmerGUI.exe",
+            os.path.expanduser(r"~\\AppData\\Local\\Elmer\\bin\\ElmerGrid.exe"),
+            r"C:\\Program Files\\Elmer\\bin\\ElmerGrid.exe",
         ]
         for exe in elmer_paths:
             if os.path.exists(exe):
@@ -186,4 +179,4 @@ def run_elmer_gui(
                 if result is not None:
                     return result
 
-    raise RuntimeError("Could not run ElmerGUI")
+    raise RuntimeError("Could not run ElmerGrid")

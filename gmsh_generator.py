@@ -186,7 +186,7 @@ Background Field = 3;
 
 // Automatically generate the mesh when opened in Gmsh
 Mesh 3;
-// Mesh is saved externally using the -o command line option
+// Mesh is saved externally as a .unv file using the -o command line option
 
 // Add helpful comments for Elmer import
 Printf("//");
